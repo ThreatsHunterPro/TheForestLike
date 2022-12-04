@@ -39,10 +39,10 @@ TextureImporter:
     wrapU: 0
     wrapV: 0
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -53,7 +53,7 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -115,21 +115,252 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: HungerIcon
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 391
+        width: 113
+        height: 113
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d27820ccff5f52e459e429c5df5f1e57
+      internalID: 336417106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThirstIcon
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 397
+        width: 83
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70243f537a912294b87295fd9c3bc1f5
+      internalID: -44078766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HeatlIcon
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 404
+        width: 102
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e2e5728a7dc1a94daac08fc31bb6536
+      internalID: 1725958117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockIcon
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 397
+        width: 106
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14b1474ccc2fb4948b9a2dc82192c33f
+      internalID: -1901685725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TemperatureIcon
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 269
+        width: 117
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aba53998277244b468aa023b6178d485
+      internalID: -535737896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HutIcon
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 278
+        width: 129
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d45e7491d1236be45b011ea69f5b9a2c
+      internalID: 690080612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IventoryIcon
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1
+        width: 224
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c75a3043b4dd55a47be662de7b124fe5
+      internalID: -261660981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SightBackground
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 0
+        width: 246
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aba26fbd8c10c642a26a1d3d40b963c
+      internalID: -1113050678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FireCampIcon
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 275
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 28, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c697bae3d7b80ad4aa787abbfda0e268
+      internalID: -925987804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodIcon
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 275
+        width: 125
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98f249e46bd456e45804e8ef319f5a58
+      internalID: -1707702423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7e6c7fcf7d139fe439d6a8ea97241e66
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FireCampIcon: -925987804
+      IventoryIcon: -261660981
+      UISprite_13: 465271689
+      SightBackground: -1113050678
+      UISprite_6: 1359755705
+      HeatlIcon: 1725958117
+      ThirstIcon: -44078766
+      RockIcon: -1901685725
+      UISprite_9: -138605049
+      UISprite_19: 1356517930
+      UISprite_10: 1414645710
+      UISprite_18: 1644662739
+      WoodIcon: -1707702423
+      UISprite_14: 1983952354
+      HutIcon: 690080612
+      UISprite_17: -1847070314
+      HungerIcon: 336417106
+      UISprite_11: -1662061888
+      UISprite_12: 652171227
+      TemperatureIcon: -535737896
+      UISprite_5: -1244795117
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
+  pSDShowRemoveMatteOption: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
