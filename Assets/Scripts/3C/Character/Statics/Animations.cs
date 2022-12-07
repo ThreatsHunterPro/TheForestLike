@@ -10,8 +10,7 @@ namespace _3C.Character.Statics
         private static readonly string sprint = "Sprint";
         private static readonly string inventory = "Inventory";
         private static readonly string read = "Read";
-        // private static string endLoad = "end";
-        private static readonly string die = "die";
+        private static readonly string die = "Die";
     
         public static int VERTICAL => Animator.StringToHash(vertical);
         public static int HORIZONTAL => Animator.StringToHash(horizontal);
@@ -19,7 +18,6 @@ namespace _3C.Character.Statics
         public static int GATHER => Animator.StringToHash(gather);
         public static int INVENTORY => Animator.StringToHash(inventory);
         public static int READ => Animator.StringToHash(read);
-        // public static int ENDLOAD => Animator.StringToHash(endLoad);
         public static int DIE => Animator.StringToHash(die);
     }
 }

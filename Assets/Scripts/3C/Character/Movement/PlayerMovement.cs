@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using _3C.Character.Statics;
 using Player;
 using UnityEngine;
@@ -8,41 +9,27 @@ namespace _3C.Character.Movement
     {
         #region Fields
 
-        [Header("Movement")]
+        [Header("Movement values")]
         [SerializeField] private bool canMove = true;
-        [SerializeField, Range(0.0f, 15.0f)] private float walkSpeed = 6.0f;
-        private float verticalSpeed;
-        
-        [Header("Rotation")]
-        [SerializeField] private bool canRotate = true;
-        [SerializeField, Range(0.0f, 20.0f)] private float rotateSpeed = 10.0f;
-
-        [Header("Sprint")]
         [SerializeField] private bool canSprint = true;
-        [SerializeField] private bool isSprinting = false;
-        [SerializeField, Range(15.0f, 30.0f)] private float sprintSpeed = 15.0f;
-
-        [Header("Animation")]
+        [SerializeField, Range(0.0f, 20.0f)] private float rotateSpeed = 10.0f;
         [SerializeField] private float dampTime = 0.2f;
-        
-        [Header("Pointers")]
         [SerializeField] private Player owner = null;
+        
+        [Header("SlowFactor")]
+        [SerializeField, Range(0.0f, 100.0f)] private float startSlowAtPercent = 50.0f;
+        
+        private float slowFactor = 1.0f;
+        private bool isSprinting = false;
 
         #endregion
         
         void Update()
         {
-            if (!owner) return;
+            if (!owner || !canMove) return;
             
-            if (canMove)
-            {
-                MoveVertical(Input.GetAxis(Inputs.Vertical));
-            }
-
-            if (canRotate)
-            {
-                MoveHorizontal(Input.GetAxis(Inputs.Horizontal));
-            }
+            MoveVertical(Input.GetAxis(Inputs.Vertical));
+            MoveHorizontal(Input.GetAxis(Inputs.Horizontal));
             
             string _sprintInput = Inputs.Sprint;
             if (canSprint && Input.GetButton(_sprintInput))
@@ -52,19 +39,21 @@ namespace _3C.Character.Movement
                     SetSprintStatus(true);
                 }
                 
-                else if (isSprinting || Input.GetButtonUp(_sprintInput) || verticalSpeed < 0.1f)
+                else if (isSprinting || Input.GetButtonUp(_sprintInput))
                 {
                     SetSprintStatus(false);
                 }
             }
         }
 
-        #region Movement
-
         private void MoveVertical(float _value)
         {
-            float _speed = _value * (isSprinting ? sprintSpeed : walkSpeed);
-            owner.Animator.SetFloat(Animations.VERTICAL, _speed, dampTime, Time.deltaTime);
+            if (_value < 0.8f)
+            {
+                SetSprintStatus(false);
+            }
+
+            owner.Animator.SetFloat(Animations.VERTICAL, _value * slowFactor, dampTime, Time.deltaTime);
         }
         
         private void MoveHorizontal(float _value)
@@ -79,7 +68,12 @@ namespace _3C.Character.Movement
             isSprinting = _status;
             owner.Animator.SetBool(Animations.SPRINT, _status);
         }
-        
-        #endregion
+
+        public void SetCanMove(bool _status) => canMove = _status;
+
+        public void ApplySlowFactor(float _health)
+        {
+            slowFactor = _health / startSlowAtPercent;
+        }
     }
 }
