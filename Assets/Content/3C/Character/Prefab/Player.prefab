@@ -2143,6 +2143,7 @@ GameObject:
   - component: {fileID: 8626436196431924403}
   - component: {fileID: 7061597123459463219}
   - component: {fileID: 6715808287989259512}
+  - component: {fileID: 5908460826506131423}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2222,6 +2223,7 @@ MonoBehaviour:
   widget: {fileID: 8626436196431924403}
   movement: {fileID: 7061597123459463219}
   needs: {fileID: 6715808287989259512}
+  sight: {fileID: 5908460826506131423}
 --- !u!114 &8626436196431924403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2234,6 +2236,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65e7a9db5ba40348a55678f62a91323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectible: {fileID: 0}
+  day: {fileID: 0}
+  hour: {fileID: 0}
+  temperature: {fileID: 0}
+  sufficientTemperatureColor: {r: 0.08235294, g: 0.8392157, b: 0.32156864, a: 1}
+  insufficientTemperatureColor: {r: 0, g: 0.77254903, b: 1, a: 1}
   hungerBar: {fileID: 0}
   thirstBar: {fileID: 0}
   healthBar: {fileID: 0}
@@ -2251,14 +2259,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
-  walkSpeed: 6
-  canRotate: 1
-  rotateSpeed: 10
   canSprint: 1
-  isSprinting: 0
-  sprintSpeed: 20
+  minimalSpeedForSprinting: 0.8
+  rotateSpeed: 10
   dampTime: 0.2
   owner: {fileID: 7061597123459463216}
+  startSlowAtPercent: 50
 --- !u!114 &6715808287989259512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2272,26 +2278,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hunger:
+    canDecrease: 0
     decreaseRate: 2
     decreaseValue: 10
     minimalAmount: 20
     currentAmount: 100
   thirst:
+    canDecrease: 0
     decreaseRate: 0.1
     decreaseValue: 2
     minimalAmount: 20
     currentAmount: 100
   temperature:
+    canDecrease: 0
     decreaseRate: 10
     decreaseValue: 20
     minimalAmount: 20
     currentAmount: 100
+  acceptableTemperature: 5
   health:
+    canDecrease: 0
     decreaseRate: 0.1
     decreaseValue: 5
     minimalAmount: 0
     currentAmount: 100
   owner: {fileID: 7061597123459463216}
+--- !u!114 &5908460826506131423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7871936983280747877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5183008227dd6ae45a900961e3e56119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkRate: 0.5
+  radius: 0.3
+  range: 2
 --- !u!1 &7996939073574168126
 GameObject:
   m_ObjectHideFlags: 0

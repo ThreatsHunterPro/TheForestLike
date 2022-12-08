@@ -1,9 +1,8 @@
-using System.ComponentModel;
 using _3C.Character.Statics;
 using Player;
 using UnityEngine;
 
-namespace _3C.Character.Movement
+namespace _3C.Character
 {
     public class PlayerMovement : MonoBehaviour
     {
@@ -12,8 +11,9 @@ namespace _3C.Character.Movement
         [Header("Movement values")]
         [SerializeField] private bool canMove = true;
         [SerializeField] private bool canSprint = true;
+        [SerializeField, Range(0.0f, 1.0f)] private float minimalSpeedForSprinting = 0.8f;
         [SerializeField, Range(0.0f, 20.0f)] private float rotateSpeed = 10.0f;
-        [SerializeField] private float dampTime = 0.2f;
+        [SerializeField, Range(0.0f, 5.0f)] private float dampTime = 0.2f;
         [SerializeField] private Player owner = null;
         
         [Header("SlowFactor")]
@@ -48,7 +48,7 @@ namespace _3C.Character.Movement
 
         private void MoveVertical(float _value)
         {
-            if (_value < 0.8f)
+            if (_value < minimalSpeedForSprinting)
             {
                 SetSprintStatus(false);
             }
@@ -73,7 +73,7 @@ namespace _3C.Character.Movement
 
         public void ApplySlowFactor(float _health)
         {
-            slowFactor = _health / startSlowAtPercent;
+            slowFactor = Mathf.Clamp(_health / startSlowAtPercent, 0.0f, 1.0f);
         }
     }
 }

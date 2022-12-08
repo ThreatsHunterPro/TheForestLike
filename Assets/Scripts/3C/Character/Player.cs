@@ -1,14 +1,13 @@
-using _3C.Character.Movement;
+using System;
 using _3C.Character.Needs;
-using _3C.Character.Widget;
 using UnityEngine;
 using World;
 
 namespace _3C.Character
 {
     [RequireComponent(typeof(Animator), typeof(CharacterController), typeof(PlayerWidget))]
-    [RequireComponent(typeof(PlayerMovement), typeof(PlayerNeeds)/*, typeof(SightBehavior)*/)]
-    // [RequireComponent(typeof(GatherBehavior), typeof(PlayerInventory), typeof(BuildBehavior))]
+    [RequireComponent(typeof(PlayerMovement), typeof(PlayerNeeds), typeof(SightBehavior))]
+    [RequireComponent(typeof(GatherBehavior), typeof(PlayerInventory)/*, typeof(BuildBehavior)*/)]
     public class Player : MonoBehaviour
     {
         [Header("Player values")]
@@ -16,12 +15,13 @@ namespace _3C.Character
         [SerializeField] private PlayerWidget widget = null;
         [SerializeField] private PlayerMovement movement = null;
         [SerializeField] private PlayerNeeds needs = null;
-
+        [SerializeField] private SightBehavior sight = null;
+        [SerializeField] private GatherBehavior gather = null;
+        [SerializeField] private PlayerInventory playerInventory = null;
+ 
         private bool IsValid => widget && movement && needs;
         public Animator Animator => animator;
         public PlayerWidget Widget => widget;
-        public PlayerMovement Movement => movement;
-        public PlayerNeeds Needs => needs;
 
         private void Start() => Init();
 
@@ -43,6 +43,16 @@ namespace _3C.Character
             
             needs.Health.OnAmountChanged += movement.ApplySlowFactor;
             needs.Health.OnMinimalAmountReached += () => movement.SetCanMove(false);
+
+            sight.OnCollectibleSighted += (_collectible) =>
+            {
+                widget.UpdateSight(_collectible ? _collectible.name : String.Empty);
+                gather.SetCollectible(_collectible);
+            };
+
+            gather.OnCollectibleGathered += playerInventory.AddItem;
+
+            playerInventory.OnInventoryUpdated += (_collectible) => widget.UpdateInventory();
         }
     }
 }
