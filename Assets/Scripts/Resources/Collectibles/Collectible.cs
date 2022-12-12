@@ -3,16 +3,29 @@ using UnityEngine;
 
 namespace Resources.Collectibles
 {
-    [RequireComponent(typeof(Collider))]
-    public abstract class Collectible : MonoBehaviour
+    public enum CollectibleType
     {
-        public event Action OnConsumed = null;
-        
+        Wood,
+        Rock,
+        Food,
+        Water
+    }
+    
+    [RequireComponent(typeof(Collider))]
+    public class Collectible : MonoBehaviour
+    {
+        [SerializeField] private bool isConsumable = false;
+        [SerializeField, Range(0, 100)] private int quantityRecoverable = 1;
+        [SerializeField, Range(0.0f, 100f)] private float needsRegenValue = 20.0f;
         [SerializeField, Range(0.0f, 60.0f)] private float gatheringDuration = 3.0f;
-        [SerializeField] private Texture icon = null;
+        [SerializeField] private CollectibleType type = CollectibleType.Wood;
+        [SerializeField] private Sprite icon = null;
 
+        public bool IsConsumable => isConsumable;
+        public int QuantityRecoverable => quantityRecoverable;
         public float GatheringDuration => gatheringDuration;
-        
-        public abstract void Consume();
+        public float NeedsRegenValue => needsRegenValue;
+        public CollectibleType Type => type;
+        public Sprite Icon => icon;
     }
 }

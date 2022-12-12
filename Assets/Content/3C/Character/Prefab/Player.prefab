@@ -319,6 +319,37 @@ Transform:
   m_Father: {fileID: 4441526847874041731}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1236631598347091311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 600532397496997876}
+  m_Layer: 0
+  m_Name: CraftBookSocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &600532397496997876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236631598347091311}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8667874440972027900}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1472093723341926567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1189,6 +1220,7 @@ Transform:
   - {fileID: 8177932407386812508}
   - {fileID: 2266334903811940152}
   - {fileID: 1496818089703419082}
+  - {fileID: 600532397496997876}
   m_Father: {fileID: 4786354169522474396}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2144,6 +2176,8 @@ GameObject:
   - component: {fileID: 7061597123459463219}
   - component: {fileID: 6715808287989259512}
   - component: {fileID: 5908460826506131423}
+  - component: {fileID: 6926813150117698440}
+  - component: {fileID: 4116373401955555044}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2177,7 +2211,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7871936983280747877}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: d9a6d6ef198d5ed4cbc3681c601a4743, type: 3}
   m_Controller: {fileID: 9100000, guid: deb61d74dc9716048bd4787e0faca3ac, type: 2}
   m_CullingMode: 1
@@ -2224,6 +2258,8 @@ MonoBehaviour:
   movement: {fileID: 7061597123459463219}
   needs: {fileID: 6715808287989259512}
   sight: {fileID: 5908460826506131423}
+  gather: {fileID: 6926813150117698440}
+  playerInventory: {fileID: 4116373401955555044}
 --- !u!114 &8626436196431924403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2231,21 +2267,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7871936983280747877}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d65e7a9db5ba40348a55678f62a91323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectiblePanel: {fileID: 0}
   collectible: {fileID: 0}
+  worldPanel: {fileID: 0}
   day: {fileID: 0}
   hour: {fileID: 0}
   temperature: {fileID: 0}
   sufficientTemperatureColor: {r: 0.08235294, g: 0.8392157, b: 0.32156864, a: 1}
   insufficientTemperatureColor: {r: 0, g: 0.77254903, b: 1, a: 1}
+  needsPanel: {fileID: 0}
   hungerBar: {fileID: 0}
   thirstBar: {fileID: 0}
   healthBar: {fileID: 0}
   temperatureBar: {fileID: 0}
+  animator: {fileID: 0}
+  inventory: {fileID: 0}
+  grid: {fileID: 0}
+  stackModel: {fileID: 0}
+  stacks: []
 --- !u!114 &7061597123459463219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2253,7 +2297,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7871936983280747877}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eeb4e2221d5b64d42b722ab40f622cab, type: 3}
   m_Name: 
@@ -2263,7 +2307,7 @@ MonoBehaviour:
   minimalSpeedForSprinting: 0.8
   rotateSpeed: 10
   dampTime: 0.2
-  owner: {fileID: 7061597123459463216}
+  animator: {fileID: 0}
   startSlowAtPercent: 50
 --- !u!114 &6715808287989259512
 MonoBehaviour:
@@ -2272,38 +2316,68 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7871936983280747877}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7605929005002e44194c3e002aa096fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hunger:
-    canDecrease: 0
-    decreaseRate: 2
-    decreaseValue: 10
+    canDecrease: 1
+    decreaseRate: 3
+    decreaseValue: 1
     minimalAmount: 20
     currentAmount: 100
   thirst:
-    canDecrease: 0
-    decreaseRate: 0.1
-    decreaseValue: 2
+    canDecrease: 1
+    decreaseRate: 0.5
+    decreaseValue: 0.5
     minimalAmount: 20
     currentAmount: 100
   temperature:
     canDecrease: 0
     decreaseRate: 10
     decreaseValue: 20
-    minimalAmount: 20
+    minimalAmount: 50
     currentAmount: 100
-  acceptableTemperature: 5
+  acceptableTemperature: 20
   health:
     canDecrease: 0
-    decreaseRate: 0.1
-    decreaseValue: 5
+    decreaseRate: 0.5
+    decreaseValue: 0
     minimalAmount: 0
     currentAmount: 100
-  owner: {fileID: 7061597123459463216}
+  owner: {fileID: 0}
 --- !u!114 &5908460826506131423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7871936983280747877}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5183008227dd6ae45a900961e3e56119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkRate: 0.5
+  radius: 0.3
+  range: 2
+--- !u!114 &6926813150117698440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7871936983280747877}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef760076269df44bba6cff628c3465b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGathering: 0
+  collectible: {fileID: 0}
+  animator: {fileID: 0}
+--- !u!114 &4116373401955555044
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2312,12 +2386,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7871936983280747877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5183008227dd6ae45a900961e3e56119, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f727ebdb9d9fbf41a415d5e67011699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkRate: 0.5
-  radius: 0.3
-  range: 2
+  stacks: []
 --- !u!1 &7996939073574168126
 GameObject:
   m_ObjectHideFlags: 0

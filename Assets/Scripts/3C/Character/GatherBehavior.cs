@@ -7,7 +7,8 @@ namespace _3C.Character
 {
     public class GatherBehavior : MonoBehaviour
     {
-        public event Action<Collectible> OnCollectibleGathered = null;
+        public event Action OnGathering = null;
+        public event Action<Collectible, int> OnCollectibleGathered = null;
 
         [Header("Gather behavior values")]
         [SerializeField] private bool isGathering = false;
@@ -22,12 +23,19 @@ namespace _3C.Character
             }
         }
 
+        private void OnDestroy()
+        {
+            OnGathering = null;
+            OnCollectibleGathered = null;
+        }
+
         private void StartGathering()
         {
             if (!collectible || !animator) return;
             
-            animator.SetBool(Animations.GATHER, true);
             isGathering = true;
+            OnGathering?.Invoke();
+            animator.SetBool(Animations.GATHER, true);
             Invoke(nameof(Gather), collectible.GatheringDuration);            
         }
 
@@ -35,7 +43,7 @@ namespace _3C.Character
         {
             if (!collectible) return;
             
-            OnCollectibleGathered?.Invoke(collectible);
+            OnCollectibleGathered?.Invoke(collectible, collectible.QuantityRecoverable);
             
             GrowBehavior _growBehavior = collectible.GetComponent<GrowBehavior>();
             if (_growBehavior)
@@ -45,7 +53,7 @@ namespace _3C.Character
 
             else
             {
-                collectible.gameObject.SetActive(false);
+                DestroyImmediate(collectible.gameObject);
             }
             
             isGathering = false;

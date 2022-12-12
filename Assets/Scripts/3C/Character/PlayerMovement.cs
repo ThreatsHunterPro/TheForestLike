@@ -1,3 +1,4 @@
+using System.Threading;
 using _3C.Character.Statics;
 using Player;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace _3C.Character
         [SerializeField, Range(0.0f, 1.0f)] private float minimalSpeedForSprinting = 0.8f;
         [SerializeField, Range(0.0f, 20.0f)] private float rotateSpeed = 10.0f;
         [SerializeField, Range(0.0f, 5.0f)] private float dampTime = 0.2f;
-        [SerializeField] private Player owner = null;
+        [SerializeField] private Animator animator = null;
         
         [Header("SlowFactor")]
         [SerializeField, Range(0.0f, 100.0f)] private float startSlowAtPercent = 50.0f;
@@ -24,9 +25,9 @@ namespace _3C.Character
 
         #endregion
         
-        void Update()
+        private void Update()
         {
-            if (!owner || !canMove) return;
+            if (!animator || !canMove) return;
             
             MoveVertical(Input.GetAxis(Inputs.Vertical));
             MoveHorizontal(Input.GetAxis(Inputs.Horizontal));
@@ -52,24 +53,30 @@ namespace _3C.Character
             {
                 SetSprintStatus(false);
             }
-
-            owner.Animator.SetFloat(Animations.VERTICAL, _value * slowFactor, dampTime, Time.deltaTime);
+            
+            animator.SetFloat(Animations.VERTICAL, _value * slowFactor, dampTime, Time.deltaTime);
         }
         
         private void MoveHorizontal(float _value)
         {
             transform.eulerAngles += transform.up * (_value * rotateSpeed * 5.0f * Time.deltaTime);
-            owner.Animator.SetFloat(Animations.HORIZONTAL, _value, dampTime, Time.deltaTime);
+            animator.SetFloat(Animations.HORIZONTAL, _value, dampTime, Time.deltaTime);
         }        
 
         private void SetSprintStatus(bool _status)
         {
             if (_status.Equals(isSprinting)) return;
             isSprinting = _status;
-            owner.Animator.SetBool(Animations.SPRINT, _status);
+            animator.SetBool(Animations.SPRINT, _status);
         }
 
-        public void SetCanMove(bool _status) => canMove = _status;
+        public void SetCanMove(bool _status)
+        {
+            canMove = _status;
+            animator.SetFloat(Animations.VERTICAL, 0.0f);
+            animator.SetFloat(Animations.HORIZONTAL, 0.0f);
+            SetSprintStatus(false);
+        }
 
         public void ApplySlowFactor(float _health)
         {

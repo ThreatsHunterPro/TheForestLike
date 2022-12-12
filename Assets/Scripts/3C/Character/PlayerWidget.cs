@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using _3C.Character.Inventory;
+using _3C.Character.Statics;
+using Palmmedia.ReportGenerator.Core;
+using Resources.Collectibles;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,22 +15,33 @@ namespace _3C.Character
         [Header("Sight values")]
         [SerializeField] private GameObject collectiblePanel = null;
         [SerializeField] private TMP_Text collectible = null;
-        
+
         [Header("World values")]
+        [SerializeField] private GameObject worldPanel;
         [SerializeField] private TMP_Text day = null;
         [SerializeField] private TMP_Text hour = null;
         [SerializeField] private TMP_Text temperature = null;
         [SerializeField] private Color sufficientTemperatureColor = new Color();
         [SerializeField] private Color insufficientTemperatureColor = new Color();
         
-        [Header("Stats values")]
+        [Header("Needs values")]
+        [SerializeField] private GameObject needsPanel;
         [SerializeField] private Image hungerBar = null;
         [SerializeField] private Image thirstBar = null;
         [SerializeField] private Image healthBar = null;
         [SerializeField] private Image temperatureBar = null;
 
-        [Header("Stats values")]
+        public event Action<bool> OnInventoryStatusChanged = null;
+
+        [Header("Inventory values")]
+        [SerializeField] private Animator animator = null;
         [SerializeField] private GameObject inventory = null;
+        [SerializeField] private Transform grid = null;
+        [SerializeField] private InventoryStack stackModel = null;
+        [SerializeField] private List<InventoryStack> stacks = new List<InventoryStack>();
+        private bool isActive = false;
+
+        private bool IsValidPanels => worldPanel && needsPanel;
         
         private void Update()
         {
@@ -33,6 +49,18 @@ namespace _3C.Character
             {
                 ToggleInventoryStatus();
             }
+        }
+
+        private void OnDestroy()
+        {
+            OnInventoryStatusChanged = null;
+        }
+
+        public void SetWidgetsStatus(bool _status)
+        {
+            if (!IsValidPanels) return;
+            worldPanel.SetActive(_status);
+            needsPanel.SetActive(_status);
         }
         
         #region Sight
@@ -101,14 +129,55 @@ namespace _3C.Character
 
         #region Inventory
 
-        private void ToggleInventoryStatus()
+        public void ToggleInventoryStatus()
         {
-            inventory.SetActive(!inventory.activeSelf);
+            isActive = !isActive;
+            
+            Invoke(nameof(ChangeActiveStatus), isActive ? 0.0f : 0.5f);
+            
+            if (animator)
+            {
+                animator.SetBool(Animations.INVENTORY, isActive);
+            }
+            
+            OnInventoryStatusChanged?.Invoke(isActive);
         }
 
-        public void UpdateInventory()
+        private void ChangeActiveStatus()
         {
+            if (!inventory) return;
+            inventory.SetActive(isActive);
+        }
+
+        public void UpdateInventory(List<CollectibleStack> _stacks)
+        {
+            if (!stackModel || !grid) return;
             
+            ClearInventory();
+            
+            int _stackCount = _stacks.Count;
+            for (int _stackIndex = 0; _stackIndex < _stackCount; _stackIndex++)
+            {
+                CollectibleStack _currentStack = _stacks[_stackIndex];
+                InventoryStack _newStack = Instantiate(stackModel, grid);
+                if (!_newStack) continue;
+                _newStack.OnConsumed += _currentStack.Consume;
+                _newStack.Init(_currentStack.Icon, _currentStack.Amount);
+                stacks.Add(_newStack);
+            }
+        }
+
+        private void ClearInventory()
+        {
+            for (int _childIndex = 0; _childIndex < grid.childCount; _childIndex++)
+            {
+                Transform _child = grid.GetChild(_childIndex);
+                if (!_child) continue;
+                DestroyImmediate(_child.gameObject);
+            }
+            
+            grid.DetachChildren();
+            stacks.Clear();
         }
 
         #endregion

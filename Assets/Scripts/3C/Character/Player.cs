@@ -1,5 +1,7 @@
 using System;
+using _3C.Character.Inventory;
 using _3C.Character.Needs;
+using Resources.Collectibles;
 using UnityEngine;
 using World;
 
@@ -40,6 +42,19 @@ namespace _3C.Character
                 _playerTemperature = _playerTemperature > 100.0f ? 100.0f : _playerTemperature;
                 needs.Temperature.Set(_playerTemperature);
             };
+
+            GameWorld.Instance.WorldGenerator.OnGenerationEnded += () =>
+            {
+                animator.enabled = true;
+                widget.enabled = true;
+                widget.SetWidgetsStatus(true);
+                movement.enabled = true;
+                needs.enabled = true;
+                sight.enabled = true;
+                gather.enabled = true;
+            };
+            
+            widget.OnInventoryStatusChanged += (isOpen) => movement.SetCanMove(!isOpen);
             
             needs.Health.OnAmountChanged += movement.ApplySlowFactor;
             needs.Health.OnMinimalAmountReached += () => movement.SetCanMove(false);
@@ -50,9 +65,33 @@ namespace _3C.Character
                 gather.SetCollectible(_collectible);
             };
 
-            gather.OnCollectibleGathered += playerInventory.AddItem;
+            gather.OnGathering += () => movement.SetCanMove(false);
+            gather.OnCollectibleGathered += (_collectible, _quantity) =>
+            {
+                playerInventory.AddItems(_collectible, _quantity);
+                movement.SetCanMove(true);
+            };
 
-            playerInventory.OnInventoryUpdated += (_collectible) => widget.UpdateInventory();
+            playerInventory.OnCollectibleConsumed += (_type, quantity) =>
+            {
+                widget.ToggleInventoryStatus();
+                UpdateNeedByType(_type, quantity);
+            };
+            playerInventory.OnInventoryUpdated += widget.UpdateInventory;
+        }
+
+        private void UpdateNeedByType(CollectibleType _type, float _value)
+        {
+            switch (_type)
+            {
+                case CollectibleType.Food:
+                    needs.Hunger.Update(_value);
+                    break;
+                    
+                case CollectibleType.Water:
+                    needs.Thirst.Update(_value);
+                    break;
+            }
         }
     }
 }
