@@ -112,5 +112,6 @@ MonoBehaviour:
       xOffset: 0.25
       yOffset: 1.25
       zOffset: 0
-    render: {fileID: 0}
+    render: {fileID: 4317267237678297903}
+    listener: {fileID: 4317267237678297896}
     target: {fileID: 0}

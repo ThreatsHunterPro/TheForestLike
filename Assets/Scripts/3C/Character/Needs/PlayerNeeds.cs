@@ -15,6 +15,7 @@ namespace _3C.Character.Needs
         [SerializeField] private Need health = null;
         [SerializeField] private Player owner = null;
 
+        public bool IsDead => !health.IsSufficient;
         public float AcceptableTemperature => acceptableTemperature;
         public Need Hunger => hunger;
         public Need Thirst => thirst;

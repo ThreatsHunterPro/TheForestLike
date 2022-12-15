@@ -72,8 +72,10 @@ namespace _3C.Camera
       [SerializeField] private CameraOffset offset = new CameraOffset();
       [SerializeField] private CameraOffset lookAtOffset = new CameraOffset();
       [SerializeField] private UnityEngine.Camera render = null;
+      [SerializeField] private AudioListener listener = null;
       [SerializeField] private Transform target = null;
-      
+
+      public bool IsValid => render && listener;
       public bool CanMove
       {
          get => canMove; 
@@ -94,9 +96,17 @@ namespace _3C.Camera
       public Quaternion TargetRotation => target ? target.transform.rotation : Quaternion.identity;
       public Transform Target => target;
 
+      public void Init(UnityEngine.Camera _render, AudioListener _listener)
+      {
+         render = _render;
+         listener = _listener;
+      }
       public void SetRenderStatus(bool _status)
       {
+         if (!render || !listener) return;
+         
          render.gameObject.SetActive(_status);
+         listener.enabled = _status;
       }
    }
 }

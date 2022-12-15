@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Resources.Collectibles;
 
 namespace _3C.Character.Inventory

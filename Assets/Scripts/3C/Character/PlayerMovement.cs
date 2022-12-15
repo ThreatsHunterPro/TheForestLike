@@ -1,6 +1,5 @@
 using System.Threading;
 using _3C.Character.Statics;
-using Player;
 using UnityEngine;
 
 namespace _3C.Character

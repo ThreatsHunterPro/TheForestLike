@@ -14,10 +14,13 @@ namespace _3C.Character
         [SerializeField] private bool isGathering = false;
         [SerializeField] private Collectible collectible = null;
         [SerializeField] private Animator animator = null;
+        private bool canGather = true;
         
+        public bool IsGathering => isGathering;
+
         private void Update()
         {
-            if (Input.GetButtonDown("Interact"))
+            if (canGather && Input.GetButtonDown(Inputs.Interact))
             {
                 StartGathering();
             }
@@ -43,6 +46,8 @@ namespace _3C.Character
         {
             if (!collectible) return;
             
+            isGathering = false;
+            animator.SetBool(Animations.GATHER, false);
             OnCollectibleGathered?.Invoke(collectible, collectible.QuantityRecoverable);
             
             GrowBehavior _growBehavior = collectible.GetComponent<GrowBehavior>();
@@ -55,15 +60,17 @@ namespace _3C.Character
             {
                 DestroyImmediate(collectible.gameObject);
             }
-            
-            isGathering = false;
-            animator.SetBool(Animations.GATHER, false);
         }
 
         public void SetCollectible(Collectible _collectible)
         {
             if (isGathering) return;
             collectible = _collectible;
+        }
+
+        public void SetCanGather(bool _status)
+        {
+            canGather = _status;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace _3C.Character
 {
     [RequireComponent(typeof(Animator), typeof(CharacterController), typeof(PlayerWidget))]
     [RequireComponent(typeof(PlayerMovement), typeof(PlayerNeeds), typeof(SightBehavior))]
-    [RequireComponent(typeof(GatherBehavior), typeof(PlayerInventory)/*, typeof(BuildBehavior)*/)]
+    [RequireComponent(typeof(GatherBehavior), typeof(PlayerInventory), typeof(BuildBehavior))]
     public class Player : MonoBehaviour
     {
         [Header("Player values")]
@@ -20,8 +20,12 @@ namespace _3C.Character
         [SerializeField] private SightBehavior sight = null;
         [SerializeField] private GatherBehavior gather = null;
         [SerializeField] private PlayerInventory playerInventory = null;
+        [SerializeField] private GameObject inventory = null;
+        [SerializeField] private BuildBehavior build = null;
  
-        private bool IsValid => widget && movement && needs;
+        private bool IsValid => widget && movement && needs && sight
+                             && gather && playerInventory && inventory && build;
+
         public Animator Animator => animator;
         public PlayerWidget Widget => widget;
 
@@ -47,17 +51,18 @@ namespace _3C.Character
             {
                 animator.enabled = true;
                 widget.enabled = true;
-                widget.SetWidgetsStatus(true);
                 movement.enabled = true;
                 needs.enabled = true;
                 sight.enabled = true;
                 gather.enabled = true;
+                inventory.SetActive(true);
+                build.enabled = true;
             };
-            
-            widget.OnInventoryStatusChanged += (isOpen) => movement.SetCanMove(!isOpen);
+
+            widget.Inventory.OnActiveStatusChanged += (_status) => UpdateStatus();
             
             needs.Health.OnAmountChanged += movement.ApplySlowFactor;
-            needs.Health.OnMinimalAmountReached += () => movement.SetCanMove(false);
+            needs.Health.OnMinimalAmountReached += UpdateStatus;
 
             sight.OnCollectibleSighted += (_collectible) =>
             {
@@ -65,21 +70,30 @@ namespace _3C.Character
                 gather.SetCollectible(_collectible);
             };
 
-            gather.OnGathering += () => movement.SetCanMove(false);
+            gather.OnGathering += UpdateStatus;
             gather.OnCollectibleGathered += (_collectible, _quantity) =>
             {
                 playerInventory.AddItems(_collectible, _quantity);
-                movement.SetCanMove(true);
+                UpdateStatus();
             };
 
             playerInventory.OnCollectibleConsumed += (_type, quantity) =>
             {
-                widget.ToggleInventoryStatus();
+                widget.Inventory.SetStatus(false);
                 UpdateNeedByType(_type, quantity);
             };
             playerInventory.OnInventoryUpdated += widget.UpdateInventory;
+
+            build.OnCraftBookStatusChanged += (_status) => UpdateStatus();
         }
 
+        private void UpdateStatus()
+        {
+            if (!IsValid) return;
+            movement.SetCanMove(!widget.Inventory.IsActive && !needs.IsDead && !gather.IsGathering && !build.CraftBookStatus);
+            gather.SetCanGather(!needs.IsDead && !build.CraftBookStatus);
+        }
+        
         private void UpdateNeedByType(CollectibleType _type, float _value)
         {
             switch (_type)

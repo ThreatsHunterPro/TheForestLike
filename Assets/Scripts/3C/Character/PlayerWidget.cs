@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using _3C.Character.Inventory;
-using _3C.Character.Statics;
-using Palmmedia.ReportGenerator.Core;
-using Resources.Collectibles;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using _3C.Character.Inventory;
+using UnityEngine.EventSystems;
+
+using InventoryUI = _3C.Character.Inventory.Inventory;
 
 namespace _3C.Character
 {
@@ -17,7 +17,6 @@ namespace _3C.Character
         [SerializeField] private TMP_Text collectible = null;
 
         [Header("World values")]
-        [SerializeField] private GameObject worldPanel;
         [SerializeField] private TMP_Text day = null;
         [SerializeField] private TMP_Text hour = null;
         [SerializeField] private TMP_Text temperature = null;
@@ -25,44 +24,19 @@ namespace _3C.Character
         [SerializeField] private Color insufficientTemperatureColor = new Color();
         
         [Header("Needs values")]
-        [SerializeField] private GameObject needsPanel;
         [SerializeField] private Image hungerBar = null;
         [SerializeField] private Image thirstBar = null;
         [SerializeField] private Image healthBar = null;
         [SerializeField] private Image temperatureBar = null;
 
-        public event Action<bool> OnInventoryStatusChanged = null;
-
         [Header("Inventory values")]
-        [SerializeField] private Animator animator = null;
-        [SerializeField] private GameObject inventory = null;
+        [SerializeField] private InventoryUI inventory = null;
         [SerializeField] private Transform grid = null;
         [SerializeField] private InventoryStack stackModel = null;
         [SerializeField] private List<InventoryStack> stacks = new List<InventoryStack>();
-        private bool isActive = false;
 
-        private bool IsValidPanels => worldPanel && needsPanel;
-        
-        private void Update()
-        {
-            if (Input.GetButtonDown("Inventory"))
-            {
-                ToggleInventoryStatus();
-            }
-        }
+        public InventoryUI Inventory => inventory;
 
-        private void OnDestroy()
-        {
-            OnInventoryStatusChanged = null;
-        }
-
-        public void SetWidgetsStatus(bool _status)
-        {
-            if (!IsValidPanels) return;
-            worldPanel.SetActive(_status);
-            needsPanel.SetActive(_status);
-        }
-        
         #region Sight
 
         public void UpdateSight(string _collectibleSighted)
@@ -129,26 +103,6 @@ namespace _3C.Character
 
         #region Inventory
 
-        public void ToggleInventoryStatus()
-        {
-            isActive = !isActive;
-            
-            Invoke(nameof(ChangeActiveStatus), isActive ? 0.0f : 0.5f);
-            
-            if (animator)
-            {
-                animator.SetBool(Animations.INVENTORY, isActive);
-            }
-            
-            OnInventoryStatusChanged?.Invoke(isActive);
-        }
-
-        private void ChangeActiveStatus()
-        {
-            if (!inventory) return;
-            inventory.SetActive(isActive);
-        }
-
         public void UpdateInventory(List<CollectibleStack> _stacks)
         {
             if (!stackModel || !grid) return;
@@ -159,11 +113,18 @@ namespace _3C.Character
             for (int _stackIndex = 0; _stackIndex < _stackCount; _stackIndex++)
             {
                 CollectibleStack _currentStack = _stacks[_stackIndex];
+                
                 InventoryStack _newStack = Instantiate(stackModel, grid);
                 if (!_newStack) continue;
+                
                 _newStack.OnConsumed += _currentStack.Consume;
                 _newStack.Init(_currentStack.Icon, _currentStack.Amount);
                 stacks.Add(_newStack);
+
+                if (_stackIndex == 0)
+                {
+                    EventSystem.current.firstSelectedGameObject = _newStack.gameObject;
+                }
             }
         }
 

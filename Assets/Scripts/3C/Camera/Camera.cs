@@ -1,8 +1,10 @@
 using System;
+using Managers;
 using UnityEngine;
 
 namespace _3C.Camera
 {
+    [RequireComponent(typeof(UnityEngine.Camera), typeof(AudioListener))]
     public abstract class CameraDefault : MonoBehaviour
     {
         protected event Action onCameraUpdated = null; 
@@ -18,6 +20,13 @@ namespace _3C.Camera
 
         private void Init()
         {
+            CameraManager.Instance.Add(this);
+
+            if (!settings.IsValid)
+            {
+                settings.Init(GetComponent<UnityEngine.Camera>(), GetComponent<AudioListener>());
+            }
+            
             onCameraUpdated += () =>
             {
                 MoveToTarget();
@@ -26,15 +35,16 @@ namespace _3C.Camera
         }
         private void Destroy()
         {
+            CameraManager.Instance.Remove(this);
             onCameraUpdated = null;
         }
-        private void Enable()
+        public void Enable()
         {
             settings.CanMove = true;
             settings.CanRotate = true;
             settings.SetRenderStatus(true);
         }
-        private void Disable()
+        public void Disable()
         {
             settings.CanMove = false;
             settings.CanRotate = false;
